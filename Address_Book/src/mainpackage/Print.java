@@ -15,30 +15,39 @@ import java.io.Writer;
 import java.util.Scanner;
 
 public class Print extends Main{
-	public static void show_contacts() throws IOException, FileNotFoundException{
-		File file = new File(System.getProperty("user.dir")+"/Address_Book/src/contacts.txt");//we get the contact file 
-		System.out.println(file.getAbsolutePath());
-		System.out.println(file.getParentFile());
-		System.out.println(file.exists());
-		file.createNewFile();
-		BufferedReader reader = new BufferedReader(new FileReader(file));
-		String currentLine;
-		boolean first = false;
-		String[] fields = new String[0];
-		while((currentLine = reader.readLine()) !=null) {//for each line in txt file
-			if(!first) {//if it is the first line the line is the fields and we save them into an array
-				fields = currentLine.split(",");
-				first = true;
+
+	private static Print instance = new Print();
+
+	ReadContacts readContacts = new ReadContacts();
+
+	private ArrayList<ArrayList<String>> line_data = new ArrayList<ArrayList<String>>();
+
+	public void setLine_data() {
+		this.line_data = readContacts.getLine_data();
+	}
+
+	private Print()
+	{
+
+	}
+
+	public static Print getInstance() {
+		return instance;
+	}
+
+	public void show_contacts() throws IOException, FileNotFoundException{
+
+		for(int i=0;i<line_data.size();i++)
+		{
+			for (int j=0;j<line_data.get(i).size();j++)
+			{
+				System.out.print(
+						line_data.get(i).get(j) + "\t\t\t\t"
+				);
 			}
-			else {//for the rest lines we print the information
-				System.out.println("-------------------");
-				String[] info=currentLine.split(",");
-				for (int i = 0; i < fields.length; i++ ) {
-					System.out.println(fields[i] +": "+ info[i]);					
-				}
-			}
+			System.out.println("");
+
 		}
-		System.out.println("-------------------");
-		reader.close();
+		
 	}
 }
